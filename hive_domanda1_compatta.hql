@@ -1,10 +1,5 @@
-set hive.auto.convert.join = false;
-
 DROP TABLE IF EXISTS historical_stock_prices_temp;
 DROP VIEW IF EXISTS historical_stock_prices;
-DROP VIEW IF EXISTS app;
-DROP VIEW IF EXISTS with_chiusura_iniziale;
-DROP VIEW IF EXISTS with_chiusura_finale;
 DROP TABLE IF EXISTS result;
 
 
@@ -14,7 +9,7 @@ CREATE TABLE historical_stock_prices_temp (ticker STRING, open DOUBLE, close DOU
 
 LOAD DATA LOCAL INPATH '/home/davide/Documenti/ProgettoBigData2020/dataset/historical_stock_prices.csv' OVERWRITE INTO TABLE historical_stock_prices_temp;
 
-CREATE VIEW historical_stock_prices AS
+CREATE TEMPORARY TABLE historical_stock_prices AS
 SELECT * FROM historical_stock_prices_temp WHERE year(from_unixtime(unix_timestamp(data,'yyyy-MM-dd'),'yyyy-MM-dd'))<2019 AND year(from_unixtime(unix_timestamp(data,'yyyy-MM-dd'),'yyyy-MM-dd'))>2007;
 
 CREATE TABLE result AS

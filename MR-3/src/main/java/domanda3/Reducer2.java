@@ -98,27 +98,38 @@ public class Reducer2 extends Reducer<Text, Text, Text, Text> {
         // Costruisco il risultato: Azienda -> trend negli ultimi 3 anni
         Double somma=0.;
         StringBuilder result = new StringBuilder();
+        result.append("Trend ");
+
         for(Double val : variazione2016) {
             somma = somma + val;
         }
-        if(variazione2016.size()!=0)
-            result.append(Math.round( ( somma/((double)variazione2016.size()) ) *100) /100.0);
+        if(variazione2016.size()!=0) {
+            //result.append(Math.round((somma / ((double) variazione2016.size())) * 100) / 100.0);
+            result.append(" 2016: ");
+            result.append(Double.valueOf(somma / variazione2016.size()).longValue());
+        }
 
         somma=0.;
         for(Double val : variazione2017) {
             somma = somma + val;
         }
-        result.append("-");
-        if(variazione2017.size()!=0)
-            result.append(Math.round( ( somma/((double)variazione2017.size()) ) *100) /100.0);
+
+        if(variazione2017.size()!=0) {
+            //result.append(Math.round((somma / ((double) variazione2017.size())) * 100) / 100.0);
+            result.append(" 2017: ");
+            result.append(Double.valueOf(somma / variazione2017.size()).longValue());
+        }
 
         somma=0.;
         for(Double val : variazione2018) {
             somma = somma + val;
         }
-        result.append("-");
-        if(variazione2018.size()!=0)
-            result.append(Math.round( ( somma/((double)variazione2018.size()) ) *100) /100.0);
+
+        if(variazione2018.size()!=0) {
+            //result.append(Math.round((somma / ((double) variazione2018.size())) * 100) / 100.0);
+            result.append(" 2018: ");
+            result.append(Double.valueOf(somma / variazione2018.size()).longValue());
+        }
 
         context.write(new Text(azienda), new Text(result.toString()));
 

@@ -1,4 +1,4 @@
-package domanda2;
+package domanda3;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;

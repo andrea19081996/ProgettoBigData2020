@@ -1,5 +1,6 @@
 package domanda3;
 
+import com.google.common.base.Splitter;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -7,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * Classe mapper dle job 1: esegue il join tra historical_stock_prices e historical_stocks.
@@ -17,8 +19,8 @@ public class Mapper1HS extends Mapper<LongWritable, Text, Text, Text> {
 
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-        String[] parts = value.toString().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); // Divido la stringa in 3 parti: Ticker, exchange e resto della stringa
 
+        String[] parts = value.toString().split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"); // Divido la stringa in 3 parti: Ticker, exchange e resto della stringa
         if(parts.length==5) {
             String ticker = parts[0];
             String nome = parts[2];

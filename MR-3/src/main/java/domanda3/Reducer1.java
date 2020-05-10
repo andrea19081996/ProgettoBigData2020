@@ -19,12 +19,12 @@ public class Reducer1 extends Reducer<Text, Text, Text, Text> {
         String[] parts;
 
         for(Text value : values) {
-            parts = value.toString().split(",");
+            parts = value.toString().split(",",2);
             if(parts[0].equals("hs")) {
                 base = parts[1];
             }else {
                 // parts[0] == hsp
-                toConcat.add(parts[1]+","+parts[2]);
+                toConcat.add(parts[1]);
             }
         }
 

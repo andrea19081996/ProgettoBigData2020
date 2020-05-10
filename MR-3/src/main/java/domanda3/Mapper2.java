@@ -21,10 +21,11 @@ public class Mapper2 extends Mapper<LongWritable, Text, Text, Text> {
         String[] parts = value.toString().split("\t");
 
         String ticker = parts[0];
-        StringTokenizer st = new StringTokenizer(parts[1], ",");
-        String nome = st.nextToken();
-        String data = st.nextToken();
-        String chiusura = st.nextToken();
+        //StringTokenizer st = new StringTokenizer(parts[1], ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+        String[] valori = parts[1].split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+        String nome = valori[0];
+        String data = valori[1];
+        String chiusura = valori[2];;
 
         //logger.info("Emetto: " + nome + " " + ticker + "," + data + "," + chiusura );
         context.write(new Text(nome), new Text( ticker + "," + data + "," + chiusura ));

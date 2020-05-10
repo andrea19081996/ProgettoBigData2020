@@ -3,14 +3,17 @@ package domanda3;
 
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Serializable;
 import scala.Tuple2;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 
 public class Domanda3 {
@@ -61,7 +64,9 @@ public class Domanda3 {
         pricesLines.filter(Domanda3::filterByYear);
 
         JavaPairRDD<String, String> prices = pricesLines.mapToPair(Domanda3::extractByTicker);
+        prices = prices.filter(tupla -> tupla._1!=null && tupla._2!=null);
         JavaPairRDD<String, String> stocks = stockesLines.mapToPair(Domanda3::extractByTicker);
+        stocks = stocks.filter(tupla -> tupla._1!=null && tupla._2!=null);
 
         JavaPairRDD<String, Tuple2<String, String>> joined = prices.join(stocks);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -69,14 +74,25 @@ public class Domanda3 {
             Stock result = new Stock();
             result.ticker = row._1;
             String[] parts = row._2._1.split(",");
-            result.chiusura = Double.valueOf(parts[1]);
-            result.data = sdf.parse(parts[6]);
+            try {
+                result.chiusura = Double.valueOf(parts[1]);
+            }catch(NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                logger.error("Impossibile parsare il prezzo di chiusura. Riga scartata.");
+                return null;
+            }
+            try {
+                result.data = sdf.parse(parts[6]);
+            }catch(ParseException | ArrayIndexOutOfBoundsException e ) {
+                logger.error("Impossibile parsare la data. Riga scartata.");
+                return null;
+            }
 
             parts = row._2._2.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
             result.nome = parts[1];
 
             return result;
         });
+        stocksDatas = stocksDatas.filter(Objects::nonNull);
 
         JavaPairRDD<String, VarianzaPerTickerAnnoApp> mapped = stocksDatas.mapToPair(stock -> {
             String key = stock.ticker + "-" + (stock.data.getYear() + 1900);
@@ -165,8 +181,14 @@ public class Domanda3 {
         JavaRDD<TrendPerAzienda> result = firstResult.map(tupla -> {
             TrendPerAzienda trend = tupla._2;
             trend.var2016 = trend.var2016/trend.count2016;
+            if(!trend.var2016.isNaN())
+                trend.var2016=Math.floor(trend.var2016);
             trend.var2017 = trend.var2017/trend.count2017;
+            if(!trend.var2017.isNaN())
+                trend.var2017=Math.floor(trend.var2017);
             trend.var2018 = trend.var2018/trend.count2018;
+            if(!trend.var2018.isNaN())
+                trend.var2018=Math.floor(trend.var2018);
 
             return trend;
         });
@@ -179,11 +201,14 @@ public class Domanda3 {
 
     public static Tuple2<String, String> extractByTicker(String line) {
         String[] parts = line.split(",",2);
+        if(parts.length!=2) return new Tuple2<>(null,null);
         return new Tuple2<String, String>(parts[0], parts[1]);
     }
 
     public static boolean filterByYear(String line) {
         String[] parts = line.split(",");
+        if(parts.length!=8) return false;
+
         String date= parts[7];  // Prendo la data dalla stringa
         date = date.substring(0,5);
         int year;

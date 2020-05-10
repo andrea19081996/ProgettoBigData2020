@@ -61,7 +61,7 @@ public class Domanda3 {
         pricesLines.filter(Domanda3::filterByYear);
 
         JavaPairRDD<String, String> prices = pricesLines.mapToPair(Domanda3::extractByTicker);
-        JavaPairRDD<String, String> stocks = pricesLines.mapToPair(Domanda3::extractByTicker);
+        JavaPairRDD<String, String> stocks = stockesLines.mapToPair(Domanda3::extractByTicker);
 
         JavaPairRDD<String, Tuple2<String, String>> joined = prices.join(stocks);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

@@ -17,26 +17,15 @@ public class Mapper1HS extends Mapper<LongWritable, Text, Text, Text> {
 
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-        String[] parts = value.toString().split(",",3); // Divido la stringa in 3 parti: Ticker, exchange e resto della stringa
-        String ticker = parts[0];
-        String nome;
-        try {
-            int endName = parts[2].indexOf("\"", 1);
-            nome = parts[2].substring(1, endName);
+        String[] parts = value.toString().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); // Divido la stringa in 3 parti: Ticker, exchange e resto della stringa
+
+        if(parts.length==5) {
+            String ticker = parts[0];
+            String nome = parts[2];
             //logger.info("Emetto elemento: " + ticker + " " + nome);
             context.write(new Text(ticker), new Text("hs," + nome));
-        }catch (Exception e) {
-            logger.error("Impossibile parsare il nome, provo con un altro metodo.");
-            try {
-                nome = parts[2].split(",")[0];
-                //logger.info("Emetto elemento: " + ticker + " " + nome);
-                context.write(new Text(ticker), new Text("hs," + nome));
-            }catch(Exception e2) {
-                logger.error("Impossibile parsare il nome, riga scartata");
-                return;
-            }
-
         }
+
 
     }
 }

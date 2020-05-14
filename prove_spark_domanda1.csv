@@ -1,0 +1,3 @@
+Ambiente,Dim. Input,Tempo,Unità,,,
+Locale,Dataset ,"1:7,783",minuti,,,
+Locale,Dataset x2,"1:37,087",minuti,,Comando:,"spark-submit --class ""domanda1.Domanda1"" --master local[4] <path-to-jar> historical_stock_prices.csv <destination-dir>"

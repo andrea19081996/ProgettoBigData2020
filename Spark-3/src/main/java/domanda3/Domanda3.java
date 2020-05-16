@@ -183,18 +183,29 @@ public class Domanda3 {
             trend.var2016 = trend.var2016/trend.count2016;
             if(!trend.var2016.isNaN())
                 trend.var2016=Math.floor(trend.var2016);
+            else
+                return null;
+
             trend.var2017 = trend.var2017/trend.count2017;
             if(!trend.var2017.isNaN())
                 trend.var2017=Math.floor(trend.var2017);
+            else
+                return null;
+
             trend.var2018 = trend.var2018/trend.count2018;
             if(!trend.var2018.isNaN())
                 trend.var2018=Math.floor(trend.var2018);
+            else
+                return null;
 
             return trend;
         });
 
+        result = result.filter((Function<TrendPerAzienda, Boolean>) trendPerAzienda -> trendPerAzienda!=null);
         JavaPairRDD<String, String> mappedByTrend = result.mapToPair(t -> new Tuple2<>(t.var2016 + " // " + t.var2017 + " // " + t.var2018 , t.nome));
         JavaPairRDD<String, String> reducedBySameTrend = mappedByTrend.reduceByKey((a1, a2) -> a1 + " -- " + a2);
+        // Prendo in considerazione quelle che hanno almeno due aziende
+        reducedBySameTrend = reducedBySameTrend.filter(tupla -> tupla._2.contains(" -- "));
 
         reducedBySameTrend.saveAsTextFile(args[2]);
     }

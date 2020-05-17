@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS historical_stock_prices;
 DROP TABLE IF EXISTS historical_stocks;
-
 DROP TABLE IF EXISTS historical_join_stock;
 DROP TABLE IF EXISTS historical_aggregate;
 
@@ -42,6 +41,7 @@ CREATE TABLE result AS
 SELECT temp.nomi_aziende, temp.variazioni_annuali
 FROM(SELECT concat_ws('//', collect_set(t.name)) AS nomi_aziende, t.variazioni_annuali
 FROM all_in_one t
+WHERE SPLIT(t.variazioni_annuali,'//')[2] IS NOT NULL
 GROUP BY t.variazioni_annuali) temp
 WHERE SPLIT(temp.nomi_aziende,'//')[1] IS NOT NULL;
 

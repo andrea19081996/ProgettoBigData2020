@@ -25,7 +25,7 @@ public class Job1_Spark {
         SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
 
         JavaPairRDD<String,String> v_stoc_prices= sc.textFile(args[0]).filter(ele -> !ele.split(",")[0].equals("ticker") && sdf.parse(ele.split(",")[7]).getYear()+1900>2007 && sdf.parse(ele.split(",")[7]).getYear()+1900<2019).mapToPair(f -> new Tuple2<>(f.split(",")[0], f.split(",")[2]+","+f.split(",")[6]+","+f.split(",")[7]));
-        JavaPairRDD<String,String> v_stoc= sc.textFile(args[1]).filter(ele -> !ele.split(",")[0].equals("ticker")).mapToPair(f -> new Tuple2<>(f.split(",")[0], f.split(",")[f.split(",").length-2]));
+        JavaPairRDD<String,String> v_stoc= sc.textFile(args[1]).filter(ele -> !ele.split(",")[0].equals("ticker")).mapToPair(f -> new Tuple2<>(f.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)")[0], f.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)")[3]));
         JavaPairRDD<String, Tuple2<String, String>> v_join = v_stoc_prices.join(v_stoc);
         JavaRDD<h_elementary> join_stock= v_join.map(Job1_Spark::crea_oggetto_singolo);
 

@@ -145,10 +145,6 @@ public class Job2MP extends Configured implements Tool {
                 h_elementary_context result = new h_elementary_context();
                 result.setPrezzo_chisura(new DoubleWritable(elemento_singolo.getPrezzo_chisura()));
                 result.setVolume(new DoubleWritable(elemento_singolo.getVolume()));
-                //result.setData_max(new Text(elemento_singolo.getData_max().toString()));
-
-                //result.setPrezzo_chiusura_min(new DoubleWritable(elemento_singolo.getPrezzo_chiusura_min()));
-                //result.setPrezzo_chiusura_max(new DoubleWritable(elemento_singolo.getPrezzo_chiusura_max()));
                 result.setVariazione_annuale(new DoubleWritable((elemento_singolo.getPrezzo_chiusura_max()-elemento_singolo.getPrezzo_chiusura_min())/elemento_singolo.getPrezzo_chiusura_min()*100));
 
                 result.setContatore(new DoubleWritable(elemento_singolo.getContatore()));

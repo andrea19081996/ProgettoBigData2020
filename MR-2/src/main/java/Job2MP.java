@@ -256,7 +256,7 @@ public class Job2MP extends Configured implements Tool {
 
     public static void main(String[] args) throws Exception {
         if (args.length != 3) {
-            System.out.println("Forza roma");
+            System.out.println("Parametri non sufficienti");
             System.exit(-1);
         }
         int res = ToolRunner.run(new Configuration(), new Job2MP(), args);

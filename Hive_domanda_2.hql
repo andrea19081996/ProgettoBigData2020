@@ -8,9 +8,9 @@ CREATE TABLE historical_stock_prices (ticker STRING, open DOUBLE, close DOUBLE, 
 
 CREATE TABLE historical_stocks(ticker STRING, `exchange` STRING, name STRING, sector STRING, industry STRING) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde';
 
-LOAD DATA LOCAL INPATH '/home/andrea/Scaricati/daily-historical-stock-prices-1970-2018/historical_stock_prices.csv' OVERWRITE INTO TABLE historical_stock_prices;
+LOAD DATA LOCAL INPATH '/home/davide/Documenti/ProgettoBigData2020/dataset/historical_stock_prices.csv' OVERWRITE INTO TABLE historical_stock_prices;
 
-LOAD DATA LOCAL INPATH '/home/andrea/Scaricati/daily-historical-stock-prices-1970-2018/historical_stocks.csv' OVERWRITE INTO TABLE historical_stocks;
+LOAD DATA LOCAL INPATH '/home/davide/Documenti/ProgettoBigData2020/dataset/historical_stocks.csv' OVERWRITE INTO TABLE historical_stocks;
 
 CREATE TEMPORARY TABLE historical_join_stock AS
 SELECT st.sector, year(from_unixtime(unix_timestamp(pr.data,'yyyy-MM-dd'),'yyyy-MM-dd')) AS anno, pr.ticker, pr.close, pr.volume, pr.data

@@ -16,8 +16,7 @@ public class Job1_Spark {
 
         //creazione Spark Session
         SparkConf conf = new SparkConf()
-                .setAppName("Job1_Spark")
-                .setMaster("local[*]");
+                .setAppName("Job1_Spark");
 
         JavaSparkContext sc= new JavaSparkContext(conf);
 

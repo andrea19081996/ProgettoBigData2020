@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS result;
 CREATE TABLE historical_stock_prices
 (ticker STRING, open DOUBLE, close DOUBLE, adj_close DOUBLE, low DOUBLE, high DOUBLE, volume DOUBLE, day DATE)
 ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde';
-LOAD DATA LOCAL INPATH '/home/andrea/Scaricati/daily-historical-stock-prices-1970-2018/historical_stock_pricesX3.csv' OVERWRITE INTO TABLE historical_stock_prices;
+LOAD DATA LOCAL INPATH '/home/andrea/Scaricati/daily-historical-stock-prices-1970-2018/historical_stock_prices.csv' OVERWRITE INTO TABLE historical_stock_prices;
 
 CREATE TABLE historical_stocks
 (ticker STRING, ex STRING, name STRING, sector STRING, industry STRING)
